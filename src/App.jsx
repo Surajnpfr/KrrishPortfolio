@@ -39,7 +39,7 @@ const TypewriterText = ({ text, delay = 30 }) => {
   );
 };
 
-import ElectronicsHub from './components/ElectronicsHub';
+import Interactive3DWork from './components/Interactive3DWork';
 import ContactSnake from './components/ContactSnake';
 
 
@@ -47,8 +47,6 @@ function App() {
   const [loading, setLoading] = useState(true);
   const [isCrystalOpen, setIsCrystalOpen] = useState(false);
   const [isNavOpen, setIsNavOpen] = useState(false); // New Nav State
-  const [isWorkUnlocked, setIsWorkUnlocked] = useState(false); // Electronics Hub State
-  const [isConnected, setIsConnected] = useState(false); // Track connection phase
   const contentRef = useRef(null);
   const lenisRef = useRef(null); // Store lenis instance
 
@@ -182,24 +180,9 @@ function App() {
           </div>
 
 
-          {/* Work Section (Gated) */}
-          <section id="work" className="py-20 min-h-screen flex flex-col items-center justify-center">
-            {!isWorkUnlocked ? (
-              <div className="w-full max-w-5xl mx-auto px-4">
-                <div className="mb-12 text-center">
-                  <h2 className={`font-display text-4xl md:text-5xl font-bold uppercase tracking-widest mb-4 transition-colors duration-500 ${isConnected ? 'text-green-500 text-shadow-[0_0_20px_#22c55e]' : 'text-white'}`}>
-                    {isConnected ? 'System Online' : 'System Offline'}
-                  </h2>
-                  <p className="text-zinc-500 font-mono text-sm max-w-md mx-auto flex flex-col gap-2">
-                    <span><TypewriterText text={isConnected ? "// CORE_SYSTEMS_ACTIVE" : "// WORK_GALLERY_MODULE_DISCONNECTED"} delay={30} /></span>
-                    <span className={isConnected ? "text-green-500/80" : "text-red-500/80"}><TypewriterText text={isConnected ? "> ACCESS GRANTED. WELCOME." : "> JOIN ALL RED DOTS TO INITIALIZE"} delay={50} /></span>
-                  </p>
-                </div>
-                <ElectronicsHub onConnected={() => setIsConnected(true)} onUnlock={() => setIsWorkUnlocked(true)} />
-              </div>
-            ) : (
-              <WorkGallery />
-            )}
+          {/* Work Section (3D Interactive Gallery) */}
+          <section id="work" className="relative">
+             <Interactive3DWork />
           </section>
 
           <div id="about">
