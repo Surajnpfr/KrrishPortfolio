@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import gsap from 'gsap';
-import profileImg from '../profile.png';
+import profileImg from '../profile_small.jpg';
 
 const Loader = ({ onComplete }) => {
     const containerRef = useRef(null);

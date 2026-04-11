@@ -4,7 +4,7 @@ import { Image, useCursor, Html, RoundedBox, MeshTransmissionMaterial, Environme
 import { projects } from '../data/projects';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as THREE from 'three';
-import { X, ArrowLeft } from 'lucide-react';
+import { X } from 'lucide-react';
 
 const projectYears = ["2024", "2024", "2023", "2022", "2022", "2021"];
 
@@ -47,7 +47,8 @@ const BackgroundMarquee = () => {
     const strip = [...projects, ...projects, ...projects];
     return (
         <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none flex items-center justify-center bg-black">
-            <div className="absolute inset-0 bg-[#09090b]/80 z-10 backdrop-blur-[4px]"></div>
+            {/* No backdrop-blur — too expensive on mobile */}
+            <div className="absolute inset-0 bg-[#09090b]/80 z-10"></div>
             <motion.div 
                 className="flex gap-4 w-max opacity-20 sepia-[0.3]"
                 animate={{ x: ["0%", "-33.3333%"] }}
@@ -55,7 +56,7 @@ const BackgroundMarquee = () => {
             >
                 {strip.map((p, i) => (
                     <div key={i} className="w-[30vw] md:w-[15vw] h-[20vh] rounded-xl overflow-hidden shrink-0">
-                        <img src={p.image} alt="" className="w-full h-full object-cover grayscale blur-[2px]" />
+                        <img src={p.image} alt="" className="w-full h-full object-cover grayscale" loading="lazy" />
                     </div>
                 ))}
             </motion.div>
@@ -115,10 +116,10 @@ const Stage1Folder = ({ stage, onOpened }) => {
         }
     });
 
-    // futuristic iOS 26 Spatial Glass
+    // futuristic iOS 26 Spatial Glass (Optimized values)
     const glassConfig = {
-        samples: 6,
-        resolution: 512,
+        samples: 3,
+        resolution: 256,
         transmission: 1.0,
         roughness: 0.1,
         thickness: 0.3,
@@ -229,6 +230,9 @@ const ProjectCard = ({ project, index, activeIndex, isMobile }) => {
         const isActive = index === activeIndex;
         const distance = index - activeIndex;
 
+        // Skip expensive updates for far-away cards
+        if (Math.abs(distance) > 2) return;
+
         // Magnetic Forward Pull
         const targetZ = isActive ? 2.5 : -Math.abs(distance) * (isMobile ? 1.0 : 2.2) - 1; 
         const targetX = isActive ? 0 : distance * (isMobile ? 0.6 : 1.25);
@@ -238,7 +242,7 @@ const ProjectCard = ({ project, index, activeIndex, isMobile }) => {
         const targetRotationY = isActive ? (state.pointer.x * -0.15) : -Math.sign(distance) * 0.15;
         const targetRotationX = isActive ? (state.pointer.y * 0.15) : 0;
         const targetRotationZ = isActive ? 0 : distance * 0.05;
-        const targetScale = isActive ? 1.0 : 0.85; // Cards made larger and more dominant
+        const targetScale = isActive ? 1.0 : 0.85;
 
         // Animate Container Transform
         root.current.position.x = THREE.MathUtils.lerp(root.current.position.x, targetX, 0.08);
@@ -254,17 +258,17 @@ const ProjectCard = ({ project, index, activeIndex, isMobile }) => {
         const targetDim = isActive ? 0 : 0.7;
         dimmingBox.current.opacity = THREE.MathUtils.lerp(dimmingBox.current.opacity, targetDim, 0.1);
 
-        // Dynamic Specular Catch
-        if (frameLightRef.current) {
-            frameLightRef.current.intensity = THREE.MathUtils.lerp(frameLightRef.current.intensity, isActive ? 1.5 : 0, 0.1);
+        // Dynamic Specular Catch — only update if active
+        if (isActive && frameLightRef.current) {
+            frameLightRef.current.intensity = THREE.MathUtils.lerp(frameLightRef.current.intensity, 1.5, 0.1);
             frameLightRef.current.position.x = state.pointer.x * 2;
             frameLightRef.current.position.y = state.pointer.y * 2;
         }
     });
 
     const cardGlassConfig = {
-        samples: 6,
-        resolution: 256,
+        samples: 3,
+        resolution: 128,
         transmission: 1.0,
         roughness: 0.0, // Absolute clarity
         thickness: 0.1,
@@ -323,7 +327,8 @@ const ProjectImage = ({ project }) => {
     
     useEffect(() => {
         if (texture) {
-            texture.anisotropy = gl.capabilities.getMaxAnisotropy();
+            // Lower anisotropy for performance — 4 is a good balance
+            texture.anisotropy = Math.min(gl.capabilities.getMaxAnisotropy(), 4);
             texture.minFilter = THREE.LinearMipmapLinearFilter;
             texture.magFilter = THREE.LinearFilter;
             texture.wrapS = texture.wrapT = THREE.ClampToEdgeWrapping;
@@ -397,13 +402,180 @@ const ProjectImage = ({ project }) => {
     );
 };
 
+// ─── MOBILE-ONLY PREMIUM ANIMATED WORK SECTION ───
+const MobileWorkSection = () => {
+    const [activeIndex, setActiveIndex] = useState(0);
+    const project = projects[activeIndex];
+
+    return (
+        <div className="w-full min-h-screen relative bg-[#09090b] text-white z-20 overflow-hidden rounded-[40px] mt-20 pb-20">
+
+            {/* Ambient Glow Orbs */}
+            <div className="absolute top-20 -left-20 w-64 h-64 bg-[#38bdf8]/10 rounded-full blur-[80px] pointer-events-none" />
+            <div className="absolute top-60 -right-20 w-64 h-64 bg-[#8b5cf6]/10 rounded-full blur-[80px] pointer-events-none" />
+
+            {/* Header — animated entrance */}
+            <motion.div
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7, ease: "easeOut" }}
+                className="px-6 pt-10 pb-6"
+            >
+                <p className="text-[10px] uppercase tracking-[0.4em] text-[#38bdf8] mb-2">Selected Works</p>
+                <h2 className="text-5xl font-display font-bold uppercase tracking-tighter text-white">Projects</h2>
+            </motion.div>
+
+            {/* Active Project Image Card — crossfade on change */}
+            <div className="px-6">
+                <div className="relative w-full aspect-video rounded-3xl overflow-hidden border border-white/10 shadow-[0_0_60px_rgba(0,0,0,0.6)]">
+                    <AnimatePresence mode="wait">
+                        <motion.img
+                            key={project.id}
+                            src={project.image}
+                            alt={project.title}
+                            className="absolute inset-0 w-full h-full object-cover"
+                            loading="lazy"
+                            initial={{ opacity: 0, scale: 1.06 }}
+                            animate={{ opacity: 1, scale: 1 }}
+                            exit={{ opacity: 0, scale: 0.97 }}
+                            transition={{ duration: 0.5, ease: "easeInOut" }}
+                        />
+                    </AnimatePresence>
+
+                    {/* Gradient overlay */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent z-10" />
+
+                    {/* Card content */}
+                    <AnimatePresence mode="wait">
+                        <motion.div
+                            key={`label-${project.id}`}
+                            className="absolute bottom-0 left-0 right-0 z-20 p-5"
+                            initial={{ opacity: 0, y: 12 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -8 }}
+                            transition={{ duration: 0.4, ease: "easeOut" }}
+                        >
+                            <span className="text-[9px] uppercase tracking-widest text-[#38bdf8] border border-[#38bdf8]/40 bg-[#38bdf8]/10 px-2.5 py-1 rounded-full">
+                                {project.category}
+                            </span>
+                            <h3 className="text-2xl font-display font-bold uppercase tracking-tight mt-2">{project.title}</h3>
+                        </motion.div>
+                    </AnimatePresence>
+
+                    {/* Page indicators */}
+                    <div className="absolute top-4 right-4 z-20 flex gap-1.5">
+                        {projects.map((_, i) => (
+                            <button key={i} onClick={() => setActiveIndex(i)}
+                                className={`h-1.5 rounded-full transition-all duration-300 ${i === activeIndex ? 'w-6 bg-white' : 'w-1.5 bg-white/30'}`}
+                            />
+                        ))}
+                    </div>
+                </div>
+
+                {/* Description & CTA */}
+                <AnimatePresence mode="wait">
+                    <motion.div
+                        key={`desc-${project.id}`}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.4, delay: 0.1 }}
+                        className="mt-5"
+                    >
+                        <p className="text-xs text-zinc-400 leading-relaxed mb-4">{project.description}</p>
+                        {project.link && (
+                            <a href={project.link} target="_blank" rel="noreferrer"
+                                className="inline-flex items-center gap-2 text-xs uppercase tracking-widest text-white bg-white/5 border border-white/15 px-5 py-2.5 rounded-full active:scale-95 transition-transform duration-150">
+                                View Project <span className="text-[#38bdf8]">→</span>
+                            </a>
+                        )}
+                    </motion.div>
+                </AnimatePresence>
+            </div>
+
+            {/* Divider */}
+            <div className="mx-6 mt-8 h-px bg-white/5" />
+
+            {/* Project List — staggered entrance */}
+            <div className="px-6 mt-4 flex flex-col">
+                {projects.map((p, i) => {
+                    const isActive = i === activeIndex;
+                    return (
+                        <motion.button
+                            key={p.id}
+                            initial={{ opacity: 0, x: -16 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            transition={{ duration: 0.4, delay: i * 0.07, ease: "easeOut" }}
+                            onClick={() => setActiveIndex(i)}
+                            className="w-full text-left flex items-center gap-4 py-4 border-b border-white/5 relative overflow-hidden group"
+                        >
+                            {/* Active sliding bar */}
+                            <motion.div
+                                className="absolute left-0 top-0 bottom-0 w-[2px] bg-[#38bdf8] rounded-full shadow-[0_0_10px_#38bdf8]"
+                                initial={false}
+                                animate={{ scaleY: isActive ? 1 : 0, opacity: isActive ? 1 : 0 }}
+                                transition={{ duration: 0.3 }}
+                            />
+
+                            {/* Subtle row highlight */}
+                            <motion.div
+                                className="absolute inset-0 bg-white/[0.02] rounded-xl"
+                                initial={false}
+                                animate={{ opacity: isActive ? 1 : 0 }}
+                                transition={{ duration: 0.3 }}
+                            />
+
+                            <span className={`font-mono text-[10px] w-10 shrink-0 transition-colors duration-300 ${isActive ? 'text-[#38bdf8]' : 'text-zinc-700'}`}>
+                                {projectYears[i]}
+                            </span>
+
+                            <span className={`font-display text-base font-medium uppercase tracking-tight flex-1 transition-all duration-400 ${isActive ? 'text-white' : 'text-zinc-600'}`}>
+                                {p.title}
+                            </span>
+
+                            {/* Arrow indicator */}
+                            <motion.span
+                                animate={{ x: isActive ? 0 : -4, opacity: isActive ? 1 : 0 }}
+                                transition={{ duration: 0.3 }}
+                                className="text-[#38bdf8] text-sm shrink-0"
+                            >
+                                →
+                            </motion.span>
+                        </motion.button>
+                    );
+                })}
+            </div>
+        </div>
+    );
+};
+
 // ─── MAIN DOM OVERLAYS & EXPORT ───
 const Interactive3DWork = () => {
     const [stage, setStage] = useState(1); 
     const [activeIndex, setActiveIndex] = useState(0);
+    // Detect mobile before mounting any Three.js
+    const isMobile = typeof window !== 'undefined' && window.innerWidth < 768;
+
+    // On mobile: skip WebGL entirely, show the CSS version
+    if (isMobile) {
+        return <MobileWorkSection />;
+    }
+
+    // Defer WebGL init until the section is in view — prevents load-time freeze
+    const [canvasReady, setCanvasReady] = useState(false);
+    const sectionRef = useRef(null);
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            ([entry]) => { if (entry.isIntersecting) { setCanvasReady(true); observer.disconnect(); } },
+            { threshold: 0.1 }
+        );
+        if (sectionRef.current) observer.observe(sectionRef.current);
+        return () => observer.disconnect();
+    }, []);
 
     return (
-        <div className="w-full h-screen min-h-[700px] relative bg-[#09090b] text-white z-20 overflow-hidden rounded-[40px] mt-20 md:mt-0">
+        <div ref={sectionRef} className="w-full h-screen min-h-[700px] relative bg-[#09090b] text-white z-20 overflow-hidden rounded-[40px] mt-20 md:mt-0">
             
             <div className="absolute inset-0 pointer-events-none opacity-20 z-10 mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
 
@@ -437,10 +609,11 @@ const Interactive3DWork = () => {
             <div className={`absolute inset-0 transition-opacity duration-1000 z-20 ${stage === 2 ? 'pointer-events-none md:pointer-events-auto' : ''}`}>
                <div className="absolute top-1/2 right-[5%] -translate-y-1/2 w-[400px] h-[400px] bg-[#8b5cf6]/15 rounded-full blur-[100px] pointer-events-none transition-all duration-1000 ease-out" style={{ opacity: stage === 2 ? 1 : 0 }}></div>
 
+                {canvasReady ? (
                 <SafeCanvasErrorBoundary>
                     <Canvas 
                         camera={{ position: [0, 0, 10], fov: 38, near: 0.1, far: 50 }} 
-                        dpr={[1, 2]}
+                        dpr={[1, 1.5]}
                         style={{ touchAction: 'none' }}
                         gl={{ 
                             antialias: true, 
@@ -455,12 +628,10 @@ const Interactive3DWork = () => {
                                 </div>
                             </Html>
                         }>
-                            <Environment preset="city" />
-                            <ambientLight intensity={0.5} />
-                            
-                            {/* Key Highlights */}
-                            <spotLight position={[10, 20, 10]} angle={0.12} penumbra={1} intensity={2} color="#ffffff" castShadow />
-                            <directionalLight position={[-5, 5, 5]} intensity={1} color="#ffffff" />
+                            {/* Skipped expensive HDR Environment — use direct lights instead for huge perf gain */}
+                            <ambientLight intensity={0.8} />
+                            <directionalLight position={[5, 10, 5]} intensity={2} color="#ffffff" />
+                            <directionalLight position={[-5, 5, 5]} intensity={1} color="#a5f3fc" />
                             
                             <SceneManager stage={stage} />
                             <Stage1Folder stage={stage} onOpened={() => setStage(2)} />
@@ -468,6 +639,12 @@ const Interactive3DWork = () => {
                         </Suspense>
                     </Canvas>
                 </SafeCanvasErrorBoundary>
+                ) : (
+                    // Placeholder while Canvas is not yet in view
+                    <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="text-zinc-700 text-sm tracking-widest uppercase animate-pulse">Scroll to explore</div>
+                    </div>
+                )}
 
                 <AnimatePresence>
                 {stage === 2 && (

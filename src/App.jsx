@@ -50,8 +50,11 @@ function App() {
   const contentRef = useRef(null);
   const lenisRef = useRef(null); // Store lenis instance
 
-  // Initialize Lenis for smooth scrolling
+  // Initialize Lenis for smooth scrolling (desktop only)
   useEffect(() => {
+    // Skip Lenis on mobile — native scroll is far faster on phones
+    if (window.innerWidth < 768) return;
+
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
