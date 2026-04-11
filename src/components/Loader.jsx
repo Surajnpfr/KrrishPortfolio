@@ -92,7 +92,7 @@ const Loader = ({ onComplete }) => {
                     <img
                         src={profileImg}
                         alt="Profile"
-                        className="w-full h-full object-cover rounded-full grayscale hover:grayscale-0 transition-all duration-500 shadow-[0_0_50px_rgba(255,255,255,0.1)]"
+                        className="w-full h-full object-cover rounded-full grayscale-0 md:grayscale hover:grayscale-0 transition-all duration-500 shadow-[0_0_50px_rgba(255,255,255,0.1)]"
                     />
                 </div>
 

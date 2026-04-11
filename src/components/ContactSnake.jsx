@@ -123,7 +123,7 @@ const ContactSnake = () => {
     }, []);
 
     return (
-        <footer ref={containerRef} id="contact" className="relative w-full pt-20 pb-1 bg-black overflow-hidden flex flex-col items-center justify-center">
+        <footer ref={containerRef} id="contact" className="relative w-full pt-12 md:pt-20 pb-1 bg-black overflow-hidden flex flex-col items-center justify-center">
             {/* The Snake Canvas - Behind Text */}
             <canvas
                 ref={canvasRef}

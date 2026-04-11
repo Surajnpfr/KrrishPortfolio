@@ -150,3 +150,160 @@
     filter: blur(10px);
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   LIGHT MODE — Comprehensive warm-cream theme
+   Palette:
+     bg-base    : #F5F0EB  (warm parchment)
+     bg-surface : #EDE8E2  (slightly darker for cards/panels)
+     bg-elevated: #E4DED7  (hover states, active)
+     text-pri   : #1A1A1A
+     text-sec   : #4A4A4A
+     text-muted : #8A8A8A
+     accent     : #1A1A1A
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* ── 1. ROOT & BODY ─────────────────────────────────────────────────────── */
+html.light,
+html.light body {
+  background-color: #F5F0EB !important;
+  color: #1A1A1A !important;
+}
+
+html.light #page-content {
+  background-color: #F5F0EB !important;
+}
+
+/* ── 1b. HERO SHIMMER TEXT — override to dark visible gradient ─────────── */
+html.light .hero-shimmer-designer {
+  background-image: linear-gradient(90deg, #1A1A1A 0%, #7C3AED 35%, #DB2777 65%, #1A1A1A 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-size: 200% auto !important;
+}
+html.light .hero-shimmer-developer {
+  background-image: linear-gradient(90deg, #1A1A1A 0%, #2563EB 35%, #059669 65%, #1A1A1A 100%) !important;
+  -webkit-background-clip: text !important;
+  -webkit-text-fill-color: transparent !important;
+  background-size: 200% auto !important;
+}
+
+/* ── 1c. CUSTOM CURSOR — warm dark in light mode ───────────────────────── */
+html.light [style*="background: rgb(0, 217, 255)"],
+html.light [style*="background: #00d9ff"] {
+  background: #1A1A1A !important;
+  box-shadow: 0 0 12px 4px rgba(26,26,26,0.4) !important;
+}
+html.light [style*="borderColor: rgba(0,217,255"] {
+  border-color: rgba(26,26,26,0.4) !important;
+  box-shadow: none !important;
+}
+
+/* ── 2. ALL DARK BACKGROUNDS ────────────────────────────────────────────── */
+html.light .bg-loris-bg,
+html.light .bg-zinc-950,
+html.light .bg-zinc-950\/80,
+html.light .bg-black,
+html.light .bg-\[\#09090b\],
+html.light .bg-\[\#050505\] {
+  background-color: #F5F0EB !important;
+}
+
+/* Semi-transparent zinc card surfaces */
+html.light .bg-zinc-900\/80 {
+  background-color: rgba(220, 214, 207, 0.85) !important;
+}
+html.light .bg-zinc-900 {
+  background-color: #EDE8E2 !important;
+}
+html.light .bg-zinc-800,
+html.light .hover\:bg-zinc-800:hover {
+  background-color: #E4DED7 !important;
+}
+
+/* ── 3. TEXT ────────────────────────────────────────────────────────────── */
+html.light .text-white          { color: #1A1A1A !important; }
+html.light .text-zinc-400       { color: #525252 !important; }
+html.light .text-zinc-500       { color: #666666 !important; }
+html.light .text-zinc-600       { color: #4A4A4A !important; }
+html.light .text-zinc-700       { color: #525252 !important; }
+html.light .text-loris-text     { color: #1A1A1A !important; }
+html.light h1, html.light h2,
+html.light h3, html.light h4    { color: #1A1A1A; }
+/* Muted/secondary text */
+html.light p                    { color: #525252; }
+
+/* ── 4. BORDERS ─────────────────────────────────────────────────────────── */
+html.light .border-white\/5   { border-color: rgba(0,0,0,0.07) !important; }
+html.light .border-white\/10  { border-color: rgba(0,0,0,0.10) !important; }
+html.light .border-white\/15  { border-color: rgba(0,0,0,0.12) !important; }
+html.light .border-white\/20  { border-color: rgba(0,0,0,0.15) !important; }
+html.light .border-white\/40  { border-color: rgba(0,0,0,0.20) !important; }
+
+/* ── 5. NAV BAR ─────────────────────────────────────────────────────────── */
+html.light nav a,
+html.light nav span,
+html.light nav button { color: #1A1A1A !important; }
+
+/* Nav Menu button glass */
+html.light nav button[style] {
+  background: linear-gradient(180deg, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.02) 100%) !important;
+  box-shadow: 0 4px 24px -1px rgba(0,0,0,0.10), inset 0 1px 0 0 rgba(255,255,255,0.8) !important;
+  border: 1px solid rgba(0,0,0,0.10) !important;
+}
+
+/* ── 6. DIMENSION NAV OVERLAY ───────────────────────────────────────────── */
+html.light .bg-zinc-950\/80.backdrop-blur-sm {
+  background-color: rgba(235, 230, 224, 0.92) !important;
+}
+
+/* Nav cards */
+html.light a.nav-card {
+  background-color: rgba(230, 224, 217, 0.85) !important;
+  border-color: rgba(0,0,0,0.08) !important;
+}
+html.light a.nav-card:hover {
+  background-color: #DDD7D0 !important;
+  border-color: rgba(0,0,0,0.14) !important;
+}
+html.light a.nav-card h3 { color: #4A4A4A !important; }
+html.light a.nav-card:hover h3,
+html.light a.nav-card .group-hover\:text-white { color: #1A1A1A !important; }
+
+/* ── 7. HERO ────────────────────────────────────────────────────────────── */
+html.light .hero-line { color: #1A1A1A !important; }
+
+/* ── 8. GLASS ION PILLS (ObsessionsClock, DimensionNav toggles) ─────────── */
+html.light [style*="rgba(255,255,255,0.10)"],
+html.light [style*="rgba(255,255,255,0.04)"] {
+  background: linear-gradient(135deg, rgba(0,0,0,0.06) 0%, rgba(0,0,0,0.02) 100%) !important;
+  border-color: rgba(0,0,0,0.10) !important;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.08), inset 0 1px 0 rgba(255,255,255,0.8) !important;
+}
+
+/* ── 9. GRADIENT OVERLAYS & SEPARATORS ─────────────────────────────────── */
+html.light .bg-gradient-to-b.from-\[\#09090b\] {
+  background: linear-gradient(to bottom, #F5F0EB, transparent) !important;
+}
+html.light .bg-gradient-to-t.from-\[\#09090b\] {
+  background: linear-gradient(to top, #F5F0EB, transparent) !important;
+}
+
+/* ── 10. NOISE OVERLAY ──────────────────────────────────────────────────── */
+html.light .bg-noise { opacity: 0.04 !important; }
+
+/* ── 11. SCROLLBAR ──────────────────────────────────────────────────────── */
+html.light ::-webkit-scrollbar-track { background: #EDE8E2; }
+html.light ::-webkit-scrollbar-thumb { background: #C0B9B0; border-radius: 10px; }
+
+/* ── 12. SELECTION ──────────────────────────────────────────────────────── */
+html.light ::selection { background: #1A1A1A; color: #F5F0EB; }
+
+/* ── SMOOTH TRANSITION ON SWITCH ────────────────────────────────────────── */
+*, *::before, *::after {
+  transition: background-color 0.4s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+}
+/* Don't transition transforms/opacity — breaks animations */
+*, *::before, *::after {
+  transition-property: background-color, color, border-color, box-shadow;
+}

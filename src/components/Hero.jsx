@@ -103,16 +103,28 @@ const Hero = () => {
                 const radius = 1.3 + prox * 3.5;
                 const alpha  = 0.12 + prox * 0.7;
 
+                // ── Theme-aware dot colours ──
+                const light = document.documentElement.classList.contains('light');
                 if (prox > 0.05) {
-                    // Colour shifts from cyan → hot-pink based on proximity angle
-                    const angle = Math.atan2(dy, dx);
-                    const hue   = (180 + (angle / Math.PI) * 60 + 360) % 360; // ~180–240 cyan/blue range
-                    gl.shadowColor = `hsla(${hue}, 100%, 70%, ${prox * 0.9})`;
-                    gl.shadowBlur  = 10;
-                    gl.fillStyle   = `hsla(${hue}, 100%, 75%, ${alpha})`;
+                    if (light) {
+                        // Warm amber/rose glow near cursor in light mode
+                        const angle = Math.atan2(dy, dx);
+                        const hue   = (30 + (angle / Math.PI) * 20 + 360) % 360;
+                        gl.shadowColor = `hsla(${hue}, 80%, 35%, ${prox * 0.6})`;
+                        gl.shadowBlur  = 8;
+                        gl.fillStyle   = `hsla(${hue}, 60%, 25%, ${alpha})`;
+                    } else {
+                        const angle = Math.atan2(dy, dx);
+                        const hue   = (180 + (angle / Math.PI) * 60 + 360) % 360;
+                        gl.shadowColor = `hsla(${hue}, 100%, 70%, ${prox * 0.9})`;
+                        gl.shadowBlur  = 10;
+                        gl.fillStyle   = `hsla(${hue}, 100%, 75%, ${alpha})`;
+                    }
                 } else {
                     gl.shadowBlur = 0;
-                    gl.fillStyle  = `rgba(255,255,255,${alpha})`;
+                    gl.fillStyle  = document.documentElement.classList.contains('light')
+                        ? `rgba(40,35,30,${alpha * 0.5})`   // dark dots in light mode
+                        : `rgba(255,255,255,${alpha})`;
                 }
 
                 gl.beginPath();
@@ -231,48 +243,36 @@ const Hero = () => {
                 </div>
             </div>
 
-            {/* ── Aurora orbs (desktop) ─────────────────────────────────────── */}
+            {/* ── Aurora orbs (desktop) — colors flip per theme ─── */}
             <div className="hidden md:block">
-                {/* 1 — Electric cyan, fastest */}
-                <div
-                    ref={orb1Ref}
-                    className="fixed top-0 left-0 w-[600px] h-[600px] rounded-full pointer-events-none"
-                    style={{
-                        background: 'radial-gradient(circle, rgba(0,217,255,0.28) 0%, rgba(56,189,248,0.14) 40%, transparent 70%)',
-                        zIndex: 1, willChange: 'transform',
-                        filter: 'blur(4px)',
-                    }}
-                />
-                {/* 2 — Hot pink */}
-                <div
-                    ref={orb2Ref}
-                    className="fixed top-0 left-0 w-[600px] h-[600px] rounded-full pointer-events-none"
-                    style={{
-                        background: 'radial-gradient(circle, rgba(255,0,110,0.22) 0%, rgba(236,72,153,0.10) 50%, transparent 70%)',
-                        zIndex: 1, willChange: 'transform',
-                        filter: 'blur(4px)',
-                    }}
-                />
-                {/* 3 — Violet */}
-                <div
-                    ref={orb3Ref}
-                    className="fixed top-0 left-0 w-[750px] h-[750px] rounded-full pointer-events-none"
-                    style={{
-                        background: 'radial-gradient(circle, rgba(139,92,246,0.18) 0%, rgba(99,102,241,0.08) 55%, transparent 70%)',
-                        zIndex: 1, willChange: 'transform',
-                        filter: 'blur(6px)',
-                    }}
-                />
-                {/* 4 — Emerald, slow */}
-                <div
-                    ref={orb4Ref}
-                    className="fixed top-0 left-0 w-[900px] h-[900px] rounded-full pointer-events-none"
-                    style={{
-                        background: 'radial-gradient(circle, rgba(0,255,136,0.10) 0%, transparent 60%)',
-                        zIndex: 1, willChange: 'transform',
-                        filter: 'blur(8px)',
-                    }}
-                />
+                {/* 1 — fast */}
+                <div ref={orb1Ref} className="fixed top-0 left-0 w-[600px] h-[600px] rounded-full pointer-events-none"
+                    style={{ zIndex: 1, willChange: 'transform', filter: 'blur(4px)',
+                        background: document.documentElement.classList.contains('light')
+                            ? 'radial-gradient(circle, rgba(251,146,60,0.18) 0%, rgba(249,115,22,0.08) 40%, transparent 70%)'
+                            : 'radial-gradient(circle, rgba(0,217,255,0.28) 0%, rgba(56,189,248,0.14) 40%, transparent 70%)',
+                    }} />
+                {/* 2 */}
+                <div ref={orb2Ref} className="fixed top-0 left-0 w-[600px] h-[600px] rounded-full pointer-events-none"
+                    style={{ zIndex: 1, willChange: 'transform', filter: 'blur(4px)',
+                        background: document.documentElement.classList.contains('light')
+                            ? 'radial-gradient(circle, rgba(244,114,182,0.14) 0%, rgba(236,72,153,0.06) 50%, transparent 70%)'
+                            : 'radial-gradient(circle, rgba(255,0,110,0.22) 0%, rgba(236,72,153,0.10) 50%, transparent 70%)',
+                    }} />
+                {/* 3 */}
+                <div ref={orb3Ref} className="fixed top-0 left-0 w-[750px] h-[750px] rounded-full pointer-events-none"
+                    style={{ zIndex: 1, willChange: 'transform', filter: 'blur(6px)',
+                        background: document.documentElement.classList.contains('light')
+                            ? 'radial-gradient(circle, rgba(167,139,250,0.12) 0%, rgba(139,92,246,0.05) 55%, transparent 70%)'
+                            : 'radial-gradient(circle, rgba(139,92,246,0.18) 0%, rgba(99,102,241,0.08) 55%, transparent 70%)',
+                    }} />
+                {/* 4 */}
+                <div ref={orb4Ref} className="fixed top-0 left-0 w-[900px] h-[900px] rounded-full pointer-events-none"
+                    style={{ zIndex: 1, willChange: 'transform', filter: 'blur(8px)',
+                        background: document.documentElement.classList.contains('light')
+                            ? 'radial-gradient(circle, rgba(251,191,36,0.08) 0%, transparent 60%)'
+                            : 'radial-gradient(circle, rgba(0,255,136,0.10) 0%, transparent 60%)',
+                    }} />
             </div>
 
             {/* ── Hero heading ──────────────────────────────────────────────── */}
@@ -285,7 +285,7 @@ const Hero = () => {
                 </div>
                 <div className="overflow-hidden flex">
                     <div
-                        className="hero-line origin-top-left"
+                        className="hero-line origin-top-left hero-shimmer-designer"
                         style={{
                             backgroundImage: 'linear-gradient(90deg, #ffffff 0%, #a5f3fc 40%, #e879f9 70%, #ffffff 100%)',
                             WebkitBackgroundClip: 'text',
@@ -303,7 +303,7 @@ const Hero = () => {
                 </div>
                 <div className="overflow-hidden flex">
                     <div
-                        className="hero-line origin-top-left"
+                        className="hero-line origin-top-left hero-shimmer-developer"
                         style={{
                             backgroundImage: 'linear-gradient(90deg, #ffffff 0%, #818cf8 40%, #34d399 70%, #ffffff 100%)',
                             WebkitBackgroundClip: 'text',

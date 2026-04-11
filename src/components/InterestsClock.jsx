@@ -154,42 +154,79 @@ const InterestsClock = () => {
     };
 
     return (
-        <section ref={sectionRef} className="py-32 bg-loris-bg flex flex-col items-center justify-center relative z-10 w-full overflow-hidden min-h-screen">
+        <section ref={sectionRef} className="py-16 md:py-32 bg-loris-bg flex flex-col items-center justify-center relative z-10 w-full overflow-hidden min-h-[60vh] md:min-h-screen">
             <SpiderWeb />
             <SpiderSwarm containerRef={sectionRef} />
 
-            <div className="mb-20 text-center relative z-10">
+            <div className="mb-16 text-center relative z-10">
                 <h2 className="font-display text-4xl md:text-5xl font-bold uppercase tracking-widest text-white mb-4">
                     Obsessions
                 </h2>
                 <div className="w-12 h-1 bg-white mx-auto"></div>
             </div>
 
-            <div ref={containerRef} className="relative w-[300px] h-[300px] md:w-[500px] md:h-[500px] flex items-center justify-center">
+            {/* ── MOBILE: 2×2 glass pill grid (no clock, no overflow) ── */}
+            <div className="md:hidden grid grid-cols-2 gap-4 px-8 w-full max-w-sm relative z-10">
+                {interests.map((item) => (
+                    <button
+                        key={item.title}
+                        onMouseEnter={() => handleHover(item.angle)}
+                        onClick={() => handleHover(item.angle)}
+                        className="group relative px-4 py-4 rounded-2xl flex items-center justify-center active:scale-95 transition-transform duration-150"
+                        style={{
+                            background: 'linear-gradient(135deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.04) 100%)',
+                            backdropFilter: 'blur(16px)',
+                            WebkitBackdropFilter: 'blur(16px)',
+                            border: '1px solid rgba(255,255,255,0.12)',
+                            boxShadow: '0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.18)',
+                        }}
+                    >
+                        {/* inner gloss top line */}
+                        <div className="absolute inset-x-3 top-0 h-px rounded-full opacity-60"
+                            style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent)' }} />
+                        <span className="relative z-10 text-sm font-display font-semibold uppercase tracking-widest text-zinc-400 group-hover:text-white transition-colors duration-300">
+                            {item.title}
+                        </span>
+                    </button>
+                ))}
+            </div>
 
+            {/* ── DESKTOP: spinning clock layout ── */}
+            <div ref={containerRef} className="hidden md:flex relative w-[500px] h-[500px] items-center justify-center">
                 {/* The Hand */}
-                <div
-                    ref={handRef}
-                    className="absolute w-full h-full flex items-center justify-center transition-transform will-change-transform"
-                >
-                    {/* Placeholder for the hand image - rotating from center */}
+                <div ref={handRef} className="absolute w-full h-full flex items-center justify-center transition-transform will-change-transform">
                     <img
                         src={handImg}
                         alt="Pointer"
-                        className="h-[35%] md:h-1/2 origin-bottom -translate-y-1/4 filter invert grayscale drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
+                        className="h-1/2 origin-bottom -translate-y-1/4 filter invert grayscale drop-shadow-[0_0_15px_rgba(255,255,255,0.3)]"
                     />
                 </div>
 
-                {/* Interest Items */}
-                {interests.map((item, index) => (
+                {/* Interest Items — iOS 26 Glass Pills */}
+                {interests.map((item) => (
                     <div
                         key={item.title}
                         onMouseEnter={() => handleHover(item.angle)}
                         className={`absolute ${item.position} cursor-pointer group`}
                     >
-                        <h3 className="text-xl md:text-4xl font-display font-bold uppercase text-zinc-600 group-hover:text-white transition-all duration-300 group-hover:scale-110 group-hover:drop-shadow-[0_0_10px_rgba(255,255,255,0.5)]">
-                            {item.title}
-                        </h3>
+                        <div
+                            className="relative px-5 py-2.5 rounded-full transition-all duration-300 ease-out group-hover:scale-110 group-hover:-translate-y-1"
+                            style={{
+                                background: 'linear-gradient(135deg, rgba(255,255,255,0.10) 0%, rgba(255,255,255,0.04) 100%)',
+                                backdropFilter: 'blur(16px)',
+                                WebkitBackdropFilter: 'blur(16px)',
+                                border: '1px solid rgba(255,255,255,0.12)',
+                                boxShadow: '0 4px 24px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.18)',
+                            }}
+                        >
+                            <div className="absolute inset-x-0 top-0 h-px rounded-full opacity-60"
+                                style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent)' }} />
+                            <div className="absolute inset-0 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                                style={{ background: 'radial-gradient(circle at 50% 0%, rgba(255,255,255,0.12), transparent 70%)' }} />
+                            <h3 className="relative z-10 text-2xl font-display font-semibold uppercase tracking-widest text-zinc-400 group-hover:text-white transition-colors duration-300 whitespace-nowrap">
+                                {item.title}
+                            </h3>
+                        </div>
                     </div>
                 ))}
             </div>

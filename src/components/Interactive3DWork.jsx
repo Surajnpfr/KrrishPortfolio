@@ -16,7 +16,7 @@ class SafeCanvasErrorBoundary extends React.Component {
     render() {
         if (this.state.hasError) {
             return (
-                <div className="absolute inset-0 bg-[#09090b] flex flex-col items-center justify-center text-zinc-500 z-50">
+                <div className="absolute inset-0 bg-zinc-950 flex flex-col items-center justify-center text-zinc-500 z-50">
                     <span className="text-xl mb-4 font-display text-red-500">WebGL Error Caught: {this.state.error?.message}</span>
                     <button onClick={() => window.location.reload()} className="px-6 py-2 border border-zinc-700 hover:text-white rounded">Retry Component</button>
                 </div>
@@ -46,9 +46,9 @@ class ImageErrorBoundary extends React.Component {
 const BackgroundMarquee = () => {
     const strip = [...projects, ...projects, ...projects];
     return (
-        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none flex items-center justify-center bg-black">
+        <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none flex items-center justify-center bg-loris-bg">
             {/* No backdrop-blur — too expensive on mobile */}
-            <div className="absolute inset-0 bg-[#09090b]/80 z-10"></div>
+            <div className="absolute inset-0 bg-zinc-950/80 z-10"></div>
             <motion.div 
                 className="flex gap-4 w-max opacity-20 sepia-[0.3]"
                 animate={{ x: ["0%", "-33.3333%"] }}
@@ -408,7 +408,7 @@ const MobileWorkSection = () => {
     const project = projects[activeIndex];
 
     return (
-        <div className="w-full min-h-screen relative bg-[#09090b] text-white z-20 overflow-hidden rounded-[40px] mt-20 pb-20">
+        <div className="w-full flex flex-col justify-start relative bg-zinc-950 text-white z-20 overflow-hidden rounded-[40px] mt-12 pb-12 md:pb-20 min-h-[85vh]">
 
             {/* Ambient Glow Orbs */}
             <div className="absolute top-20 -left-20 w-64 h-64 bg-[#38bdf8]/10 rounded-full blur-[80px] pointer-events-none" />
@@ -575,7 +575,7 @@ const Interactive3DWork = () => {
     }, []);
 
     return (
-        <div ref={sectionRef} className="w-full h-screen min-h-[700px] relative bg-[#09090b] text-white z-20 overflow-hidden rounded-[40px] mt-20 md:mt-0">
+        <div ref={sectionRef} className="w-full h-screen min-h-[700px] relative bg-zinc-950 text-white z-20 overflow-hidden rounded-[40px] mt-20 md:mt-0">
             
             <div className="absolute inset-0 pointer-events-none opacity-20 z-10 mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
 
@@ -707,7 +707,7 @@ const Interactive3DWork = () => {
                                 )
                             })}
                         </div>
-                        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#09090b] to-transparent pointer-events-none"></div>
+                        <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-zinc-950 to-transparent pointer-events-none"></div>
                     </motion.div>
                 )}
             </AnimatePresence>

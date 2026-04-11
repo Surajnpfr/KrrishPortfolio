@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Lenis from 'lenis';
 import gsap from 'gsap';
-import { Instagram, Facebook, Linkedin, Github } from 'lucide-react';
+import { Instagram, Facebook, Linkedin, Github, Sun, Moon } from 'lucide-react';
+import { playWhoosh } from './utils/sound';
 import Navigation from './components/Navigation';
 import Loader from './components/Loader';
 import Hero from './components/Hero';
@@ -46,9 +47,24 @@ import ContactSnake from './components/ContactSnake';
 function App() {
   const [loading, setLoading] = useState(true);
   const [isCrystalOpen, setIsCrystalOpen] = useState(false);
-  const [isNavOpen, setIsNavOpen] = useState(false); // New Nav State
+  const [isNavOpen, setIsNavOpen] = useState(false);
+  // Theme: persisted to localStorage
+  const [isLight, setIsLight] = useState(() => localStorage.getItem('theme') === 'light');
+  // Sound: off by default
+  const [isSoundOn, setIsSoundOn] = useState(() => localStorage.getItem('sound') === 'on');
   const contentRef = useRef(null);
-  const lenisRef = useRef(null); // Store lenis instance
+  const lenisRef = useRef(null);
+
+  // Apply / remove html.light class
+  useEffect(() => {
+    document.documentElement.classList.toggle('light', isLight);
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  }, [isLight]);
+
+  // Persist sound preference
+  useEffect(() => {
+    localStorage.setItem('sound', isSoundOn ? 'on' : 'off');
+  }, [isSoundOn]);
 
   // Initialize Lenis for smooth scrolling (desktop only)
   useEffect(() => {
@@ -95,6 +111,12 @@ function App() {
         el?.scrollIntoView({ behavior: 'smooth' });
       }
     }, 1000); // Wait slightly longer than animation (800ms) to ensure layout is stable
+  };
+
+  // Nav toggle — plays whoosh if sound is on
+  const handleNavToggle = () => {
+    if (isSoundOn) playWhoosh();
+    setIsNavOpen(p => !p);
   };
 
   // Dimension Shift Animation
@@ -145,7 +167,7 @@ function App() {
       */}
       <Navigation
         isOpen={isNavOpen}
-        onToggle={() => setIsNavOpen(!isNavOpen)}
+        onToggle={handleNavToggle}
       />
 
       {/* 
@@ -155,6 +177,10 @@ function App() {
         isOpen={isNavOpen}
         onClose={() => setIsNavOpen(false)}
         onNavigate={handleNavigation}
+        isLight={isLight}
+        onToggleTheme={() => setIsLight(p => !p)}
+        isSoundOn={isSoundOn}
+        onToggleSound={() => setIsSoundOn(p => !p)}
       />
 
       {/* 
