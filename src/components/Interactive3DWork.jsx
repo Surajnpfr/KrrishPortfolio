@@ -4,6 +4,7 @@ import { Image, useCursor, Html, RoundedBox, MeshTransmissionMaterial, Environme
 import { projects } from '../data/projects';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as THREE from 'three';
+import { X, ArrowLeft } from 'lucide-react';
 
 const projectYears = ["2024", "2024", "2023", "2022", "2022", "2021"];
 
@@ -391,7 +392,23 @@ const Interactive3DWork = () => {
     return (
         <div className="w-full h-screen min-h-[700px] relative bg-[#09090b] text-white z-20 overflow-hidden rounded-[40px] mt-20 md:mt-0">
             
-            <div className="absolute inset-0 pointer-events-none opacity-20 z-50 mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+            <div className="absolute inset-0 pointer-events-none opacity-20 z-10 mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+
+            {/* Glassmorphism Back Button */}
+            <AnimatePresence>
+                {stage === 2 && (
+                    <motion.button
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -20 }}
+                        onClick={() => setStage(1)}
+                        className="absolute top-8 right-8 z-[60] flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 group shadow-[0_8px_32px_rgba(0,0,0,0.3)]"
+                    >
+                        <X className="w-4 h-4 text-zinc-400 group-hover:text-white transition-colors" />
+                        <span className="text-xs font-display font-bold tracking-[0.2em] text-zinc-400 group-hover:text-white uppercase transition-colors">Close</span>
+                    </motion.button>
+                )}
+            </AnimatePresence>
 
             <AnimatePresence>
                 {stage === 1 && (
