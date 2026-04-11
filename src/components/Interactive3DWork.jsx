@@ -71,7 +71,7 @@ const SceneManager = ({ stage }) => {
     useFrame((state) => {
         const targetX = stage === 1 ? 0 : (isMobile ? 0 : -2.0);
         const targetY = stage === 1 ? 0 : (isMobile ? -1.5 : 0);
-        const targetZ = stage === 1 ? 9 : 7.5; 
+        const targetZ = stage === 1 ? 9 : (isMobile ? 6 : 7.5); 
 
         camera.position.x = THREE.MathUtils.lerp(camera.position.x, targetX, 0.04);
         camera.position.y = THREE.MathUtils.lerp(camera.position.y, targetY, 0.04);
@@ -89,6 +89,8 @@ const SceneManager = ({ stage }) => {
 };
 
 const Stage1Folder = ({ stage, onOpened }) => {
+    const { size } = useThree();
+    const isMobile = size.width < 768;
     const group = useRef();
     const frontCover = useRef();
     const [hovered, setHovered] = useState(false);
@@ -137,9 +139,14 @@ const Stage1Folder = ({ stage, onOpened }) => {
             ref={group} 
             onPointerOver={() => setHovered(true)} 
             onPointerOut={() => setHovered(false)}
-            onClick={() => { if (stage === 1) onOpened(); }}
-            scale={0.55}
+            onPointerDown={() => { if (stage === 1) onOpened(); }}
+            scale={isMobile ? 0.28 : 0.55}
         >
+            {/* INVISIBLE HITBOX - Larger than the folder for easier clicking */}
+             <mesh visible={false} onPointerDown={() => { if (stage === 1) onOpened(); }}>
+                <boxGeometry args={[isMobile ? 8 : 4.5, isMobile ? 6 : 3.2, 1.5]} />
+                <meshBasicMaterial transparent opacity={0} />
+            </mesh>
             <pointLight position={[0, 2, 4]} intensity={hovered ? 5 : 2} color={hovered ? "#ffffff" : "#7dd3fc"} distance={12} />
             
             {/* macOS Back Panel + Top Tab */}
@@ -279,6 +286,12 @@ const ProjectCard = ({ project, index, activeIndex, isMobile }) => {
             <RoundedBox args={[3.8, 2.53, 0.06]} radius={0.15} smoothness={6} position={[0, 0, 0]}>
                 <MeshTransmissionMaterial {...cardGlassConfig} />
             </RoundedBox>
+
+            {/* INVISIBLE HITBOX - Extends slightly beyond the card for easier clicking */}
+             <mesh visible={false} onClick={() => window.open(project.link, '_blank')}>
+                <planeGeometry args={[4.2, 2.8]} />
+                <meshBasicMaterial transparent opacity={0} />
+            </mesh>
 
             {/* STEP 2: PERFECTLY ROUNDED IMAGE PLATE (Pinned to the surface) */}
             <ImageErrorBoundary meshProps={{ position: [0, 0, 0.035] }}>
@@ -428,6 +441,7 @@ const Interactive3DWork = () => {
                     <Canvas 
                         camera={{ position: [0, 0, 10], fov: 38, near: 0.1, far: 50 }} 
                         dpr={[1, 2]}
+                        style={{ touchAction: 'none' }}
                         gl={{ 
                             antialias: true, 
                             powerPreference: "high-performance",
@@ -458,14 +472,14 @@ const Interactive3DWork = () => {
                 <AnimatePresence>
                 {stage === 2 && (
                     <motion.div 
-                        className="absolute top-0 bottom-0 left-0 w-full md:w-[42%] z-30 flex flex-col justify-center px-6 md:px-12"
+                        className="absolute top-0 bottom-0 left-0 w-full md:w-[42%] z-30 flex flex-col justify-start md:justify-center px-6 md:px-12 pt-28 md:pt-0 pointer-events-none md:pointer-events-auto"
                         initial={{ opacity: 0, x: -50 }}
                         animate={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8, delay: 0.3, ease: "easeOut" }}
                     >
-                        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#09090b] to-transparent pointer-events-none"></div>
+                        <div className="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#09090b] to-transparent pointer-events-none md:block hidden"></div>
                         
-                        <div className="overflow-hidden h-full flex flex-col justify-center gap-4 md:gap-6 py-12">
+                        <div className="overflow-y-auto md:overflow-hidden h-[45vh] md:h-full flex flex-col justify-start md:justify-center gap-2 md:gap-6 py-6 px-2 no-scrollbar scroll-smooth">
                             {projects.map((project, index) => {
                                 const isActive = activeIndex === index;
                                 return (
@@ -481,7 +495,7 @@ const Interactive3DWork = () => {
                                                 {projectYears[index]}
                                             </span>
 
-                                            <h4 className={`text-xl md:text-2xl lg:text-3xl font-display font-medium tracking-tight transition-all duration-500 uppercase ${isActive ? 'text-white translate-x-2 drop-shadow-lg' : 'text-zinc-700 translate-x-0 group-hover:text-zinc-500'}`}>
+                                            <h4 className={`text-lg md:text-2xl lg:text-3xl font-display font-medium tracking-tight transition-all duration-500 uppercase ${isActive ? 'text-white translate-x-2 drop-shadow-lg' : 'text-zinc-700 translate-x-0 group-hover:text-zinc-500'}`}>
                                                 {project.title}
                                             </h4>
                                         </div>
@@ -491,7 +505,7 @@ const Interactive3DWork = () => {
                                                 <motion.div 
                                                     initial={{ height: 0, opacity: 0 }} animate={{ height: "auto", opacity: 1 }} exit={{ height: 0, opacity: 0 }}
                                                     transition={{ duration: 0.4, ease: "easeOut" }}
-                                                    className="overflow-hidden pl-16 md:pl-20"
+                                                    className="overflow-hidden pl-8 md:pl-20"
                                                 >
                                                     <div className="mt-3 flex flex-col gap-2">
                                                         <div className="flex w-max">

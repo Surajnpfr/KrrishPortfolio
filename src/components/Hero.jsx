@@ -58,7 +58,7 @@ const Hero = () => {
                 className="fixed top-0 left-0 w-[400px] h-[400px] bg-white rounded-full blur-[80px] pointer-events-none mix-blend-difference z-20 opacity-0 md:opacity-100 -translate-x-1/2 -translate-y-1/2"
             ></div>
 
-            <h1 ref={titleRef} className="font-display font-bold text-[13.5vw] leading-[0.75] tracking-tighter uppercase text-white mix-blend-difference z-10 flex flex-col">
+            <h1 ref={titleRef} className="font-display font-bold text-5xl sm:text-7xl md:text-[13.5vw] leading-[0.75] tracking-tighter uppercase text-white mix-blend-difference z-10 flex flex-col">
                 <div className="overflow-hidden flex"><div className="hero-line origin-top-left">UI/UX</div></div>
                 <div className="overflow-hidden flex"><div className="hero-line origin-top-left">Designer</div></div>
                 <div className="overflow-hidden flex items-baseline gap-4">

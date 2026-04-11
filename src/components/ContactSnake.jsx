@@ -135,7 +135,7 @@ const ContactSnake = () => {
 
             {/* Content - On Top with Mix Blend Mode */}
             <div className="relative z-20 flex flex-col items-center justify-center text-center mix-blend-difference px-6">
-                <h2 className="font-display text-4xl md:text-6xl lg:text-8xl font-bold uppercase tracking-tight mb-6 text-white">
+                <h2 className="font-display text-5xl md:text-6xl lg:text-8xl font-bold uppercase tracking-tight mb-8 text-white leading-[0.9]">
                     Let's Work<br />Together
                 </h2>
 

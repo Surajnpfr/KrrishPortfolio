@@ -6,10 +6,10 @@ import handImg from '../assets/skeletal_hand_pointer.svg';
 gsap.registerPlugin(ScrollTrigger);
 
 const interests = [
-    { title: "Art", angle: 0, position: "top-0 left-1/2 -translate-x-1/2 -translate-y-8 md:-translate-y-4" },       // 12:00
-    { title: "Basketball", angle: 90, position: "top-1/2 right-0 translate-x-10 md:translate-x-48 -translate-y-1/2" }, // 3:00
-    { title: "Coding", angle: 180, position: "bottom-0 left-1/2 -translate-x-1/2 translate-y-8 md:translate-y-4" },  // 6:00
-    { title: "Robotics", angle: 270, position: "top-1/2 left-0 -translate-x-10 md:-translate-x-32 -translate-y-1/2" },  // 9:00
+    { title: "Art", angle: 0, position: "top-0 left-1/2 -translate-x-1/2 -translate-y-8 md:-translate-y-4" },       
+    { title: "Basketball", angle: 90, position: "top-1/2 right-0 translate-x-4 md:translate-x-48 -translate-y-1/2" }, 
+    { title: "Coding", angle: 180, position: "bottom-0 left-1/2 -translate-x-1/2 translate-y-8 md:translate-y-4" },  
+    { title: "Robotics", angle: 270, position: "top-1/2 left-0 -translate-x-4 md:-translate-x-32 -translate-y-1/2" },  
 ];
 
 const SpiderSwarm = ({ containerRef }) => {

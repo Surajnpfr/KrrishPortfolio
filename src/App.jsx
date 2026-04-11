@@ -98,9 +98,9 @@ function App() {
   useEffect(() => {
     if (isNavOpen) {
       gsap.to(contentRef.current, {
-        scale: 0.6, // Drastic scale to reveal the menu behind
+        scale: window.innerWidth < 768 ? 0.85 : 0.6, // Less drastic scale on mobile
         borderRadius: "40px",
-        y: 100, // Move down to clear top area
+        y: window.innerWidth < 768 ? 60 : 100, // Move down less on mobile
         opacity: 0.8,
         filter: "blur(0px)", // Removed blur to keep "dashboard" feel clean
         duration: 0.8,
