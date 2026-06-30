@@ -1,4 +1,5 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "headers": [
     {
       "source": "/(.*)",
@@ -17,7 +18,13 @@
       ]
     },
     {
-      "source": "/(.*\\.(webp|jpg|jpeg|png|svg|ico|woff2))",
+      "source": "/projects/:path*",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=2592000" }
+      ]
+    },
+    {
+      "source": "/(.*)\\.(webp|jpg|jpeg|png|svg|ico|woff2)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=2592000" }
       ]
