@@ -18,8 +18,14 @@ const SpiderSwarm = ({ containerRef }) => {
     useEffect(() => {
         if (!containerRef.current) return;
 
+        let rect = containerRef.current.getBoundingClientRect();
+
+        const updateRect = () => {
+            rect = containerRef.current.getBoundingClientRect();
+        };
+        window.addEventListener('resize', updateRect);
+
         const onMouseMove = (e) => {
-            const rect = containerRef.current.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
 
@@ -44,7 +50,10 @@ const SpiderSwarm = ({ containerRef }) => {
 
         const section = containerRef.current;
         section.addEventListener('mousemove', onMouseMove);
-        return () => section.removeEventListener('mousemove', onMouseMove);
+        return () => {
+            section.removeEventListener('mousemove', onMouseMove);
+            window.removeEventListener('resize', updateRect);
+        };
     }, [containerRef]);
 
     return (

@@ -12,6 +12,9 @@ const Navigation = ({ isOpen, onToggle }) => {
                 {/* Menu Button - Apple Crystal Style */}
                 <button
                     onClick={onToggle}
+                    aria-label={isOpen ? 'Close menu' : 'Open menu'}
+                    aria-expanded={isOpen}
+                    aria-controls="dimension-nav"
                     className="pointer-events-auto group relative px-8 py-3 rounded-full transition-all duration-300 hover:scale-105 active:scale-95"
                     style={{
                         zIndex: 60,

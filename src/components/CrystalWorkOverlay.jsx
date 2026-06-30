@@ -59,8 +59,8 @@ const CrystalWorkOverlay = ({ isOpen, onClose }) => {
             className="fixed inset-0 z-[90] bg-zinc-950 text-white flex flex-col md:flex-row overflow-hidden"
             style={{ clipPath: "circle(0% at 100% 100%)" }} // Initial state
         >
-            <button onClick={onClose} className="absolute top-8 right-8 z-[100] p-4 bg-white/10 rounded-full hover:bg-white hover:text-black transition-all">
-                <X size={24} />
+            <button onClick={onClose} aria-label="Close project gallery" className="absolute top-8 right-8 z-[100] p-4 bg-white/10 rounded-full hover:bg-white hover:text-black transition-all">
+                <X size={24} aria-hidden="true" />
             </button>
 
             {/* Left Column: Crystal Display */}
@@ -68,11 +68,14 @@ const CrystalWorkOverlay = ({ isOpen, onClose }) => {
                 <div ref={leftColRef} className="relative w-full max-w-lg aspect-[4/5] rounded-[2rem] overflow-hidden border border-white/10 shadow-2xl perspective-1000 group">
                     {/* "Crystal" Overlay Effects */}
                     <div className="absolute inset-0 z-20 bg-gradient-to-tr from-white/10 to-transparent opacity-50 mix-blend-overlay pointer-events-none"></div>
-                    <div className="absolute inset-0 z-20 bg-[url('http://assets.iceable.com/img/noise-transparent.png')] opacity-20 mix-blend-overlay pointer-events-none"></div>
+                    <div className="absolute inset-0 z-20 noise-texture opacity-20 mix-blend-overlay pointer-events-none" aria-hidden="true"></div>
 
                     <img
                         src={activeProject.image}
                         alt={activeProject.title}
+                        width={640}
+                        height={800}
+                        decoding="async"
                         className="crystal-image w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     />
 

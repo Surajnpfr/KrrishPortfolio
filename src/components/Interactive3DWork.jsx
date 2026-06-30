@@ -1,6 +1,6 @@
 import React, { useState, useRef, Suspense, useEffect } from 'react';
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
-import { Image, useCursor, Html, RoundedBox, MeshTransmissionMaterial, Environment, useTexture } from '@react-three/drei';
+import { useCursor, Html, RoundedBox, MeshTransmissionMaterial, useTexture } from '@react-three/drei';
 import { projects } from '../data/projects';
 import { motion, AnimatePresence } from 'framer-motion';
 import * as THREE from 'three';
@@ -18,7 +18,7 @@ class SafeCanvasErrorBoundary extends React.Component {
             return (
                 <div className="absolute inset-0 bg-zinc-950 flex flex-col items-center justify-center text-zinc-500 z-50">
                     <span className="text-xl mb-4 font-display text-red-500">WebGL Error Caught: {this.state.error?.message}</span>
-                    <button onClick={() => window.location.reload()} className="px-6 py-2 border border-zinc-700 hover:text-white rounded">Retry Component</button>
+                    <button onClick={() => window.location.reload()} aria-label="Retry loading 3D gallery" className="px-6 py-2 border border-zinc-700 hover:text-white rounded">Retry Component</button>
                 </div>
             );
         }
@@ -56,7 +56,7 @@ const BackgroundMarquee = () => {
             >
                 {strip.map((p, i) => (
                     <div key={i} className="w-[30vw] md:w-[15vw] h-[20vh] rounded-xl overflow-hidden shrink-0">
-                        <img src={p.image} alt="" className="w-full h-full object-cover grayscale" loading="lazy" />
+                        <img src={p.image} alt="" width={320} height={200} loading="lazy" decoding="async" className="w-full h-full object-cover grayscale" />
                     </div>
                 ))}
             </motion.div>
@@ -433,6 +433,9 @@ const MobileWorkSection = () => {
                             key={project.id}
                             src={project.image}
                             alt={project.title}
+                            width={640}
+                            height={360}
+                            decoding="async"
                             className="absolute inset-0 w-full h-full object-cover"
                             loading="lazy"
                             initial={{ opacity: 0, scale: 1.06 }}
@@ -465,9 +468,15 @@ const MobileWorkSection = () => {
                     {/* Page indicators */}
                     <div className="absolute top-4 right-4 z-20 flex gap-1.5">
                         {projects.map((_, i) => (
-                            <button key={i} onClick={() => setActiveIndex(i)}
-                                className={`h-1.5 rounded-full transition-all duration-300 ${i === activeIndex ? 'w-6 bg-white' : 'w-1.5 bg-white/30'}`}
-                            />
+                            <button
+                                key={i}
+                                onClick={() => setActiveIndex(i)}
+                                aria-label={`Go to project ${i + 1}`}
+                                aria-current={i === activeIndex ? 'true' : undefined}
+                                className={`h-1.5 rounded-full transition-all duration-300 min-w-[44px] min-h-[44px] flex items-center justify-center ${i === activeIndex ? '' : ''}`}
+                            >
+                                <span className={`block rounded-full transition-all duration-300 ${i === activeIndex ? 'w-6 h-1.5 bg-white' : 'w-1.5 h-1.5 bg-white/30'}`} />
+                            </button>
                         ))}
                     </div>
                 </div>
@@ -507,6 +516,8 @@ const MobileWorkSection = () => {
                             animate={{ opacity: 1, x: 0 }}
                             transition={{ duration: 0.4, delay: i * 0.07, ease: "easeOut" }}
                             onClick={() => setActiveIndex(i)}
+                            aria-label={`View ${p.title}`}
+                            aria-pressed={isActive}
                             className="w-full text-left flex items-center gap-4 py-4 border-b border-white/5 relative overflow-hidden group"
                         >
                             {/* Active sliding bar */}
@@ -577,7 +588,7 @@ const Interactive3DWork = () => {
     return (
         <div ref={sectionRef} className="w-full h-screen min-h-[700px] relative bg-zinc-950 text-white z-20 overflow-hidden rounded-[40px] mt-20 md:mt-0">
             
-            <div className="absolute inset-0 pointer-events-none opacity-20 z-10 mix-blend-overlay bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
+            <div className="absolute inset-0 pointer-events-none opacity-20 z-10 mix-blend-overlay noise-texture" aria-hidden="true"></div>
 
             {/* Glassmorphism Back Button */}
             <AnimatePresence>
@@ -587,9 +598,10 @@ const Interactive3DWork = () => {
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -20 }}
                         onClick={() => setStage(1)}
+                        aria-label="Close project view"
                         className="absolute top-8 right-8 z-[60] flex items-center gap-2 px-5 py-2.5 rounded-full bg-white/5 backdrop-blur-xl border border-white/10 hover:bg-white/10 hover:border-white/20 transition-all duration-300 group shadow-[0_8px_32px_rgba(0,0,0,0.3)]"
                     >
-                        <X className="w-4 h-4 text-zinc-400 group-hover:text-white transition-colors" />
+                        <X className="w-4 h-4 text-zinc-400 group-hover:text-white transition-colors" aria-hidden="true" />
                         <span className="text-xs font-display font-bold tracking-[0.2em] text-zinc-400 group-hover:text-white uppercase transition-colors">Close</span>
                     </motion.button>
                 )}

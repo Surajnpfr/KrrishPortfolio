@@ -298,7 +298,7 @@ const Hero = () => {
                     </div>
                 </div>
                 <div className="overflow-hidden flex items-baseline gap-2">
-                    <div className="hero-line origin-top-left text-zinc-600">&</div>
+                    <div className="hero-line origin-top-left text-zinc-500">&</div>
                     <div className="hero-line origin-top-left">Game</div>
                 </div>
                 <div className="overflow-hidden flex">
@@ -338,7 +338,7 @@ const Hero = () => {
                     ].map(({ num, label }) => (
                         <div key={label} className="flex items-baseline gap-2">
                             <span className="font-display font-bold text-2xl text-white/90">{num}</span>
-                            <span className="text-[10px] uppercase tracking-widest text-zinc-600">{label}</span>
+                            <span className="text-[10px] uppercase tracking-widest text-zinc-500">{label}</span>
                         </div>
                     ))}
                 </div>

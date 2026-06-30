@@ -14,6 +14,8 @@ const ContactSnake = () => {
         const ctx = canvas.getContext('2d');
         let animationFrameId;
 
+        const pointer = { clientX: 0, clientY: 0 };
+
         const resize = () => {
             if (containerRef.current) {
                 canvas.width = containerRef.current.clientWidth;
@@ -23,8 +25,10 @@ const ContactSnake = () => {
                 canvas.height = window.innerHeight;
             }
 
-            // Initialize mouse center screen if not moved yet
             if (mouseRef.current.x === 0) {
+                const rect = canvas.getBoundingClientRect();
+                pointer.clientX = rect.left + canvas.width / 2;
+                pointer.clientY = rect.top + canvas.height / 2;
                 mouseRef.current.x = canvas.width / 2;
                 mouseRef.current.y = canvas.height / 2;
             }
@@ -32,13 +36,11 @@ const ContactSnake = () => {
         window.addEventListener('resize', resize);
         resize();
 
-        // Mouse Tracking
         const onMouseMove = (e) => {
-            const rect = canvas.getBoundingClientRect();
-            mouseRef.current.x = e.clientX - rect.left;
-            mouseRef.current.y = e.clientY - rect.top;
+            pointer.clientX = e.clientX;
+            pointer.clientY = e.clientY;
         };
-        window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('mousemove', onMouseMove, { passive: true });
 
         // Snake Configuration
         const segments = 40; // Fewer segments for tighter control
@@ -52,6 +54,11 @@ const ContactSnake = () => {
         }));
 
         const animate = () => {
+            // ponytail: one layout read per frame — accurate after scroll/transform, not per mousemove
+            const rect = canvas.getBoundingClientRect();
+            mouseRef.current.x = pointer.clientX - rect.left;
+            mouseRef.current.y = pointer.clientY - rect.top;
+
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
             // Move Head towards Mouse (Lerp)
@@ -148,6 +155,7 @@ const ContactSnake = () => {
                                 animate={{ opacity: 1, scale: 1 }}
                                 exit={{ opacity: 0, scale: 0.8 }}
                                 onClick={() => setShowEmail(true)}
+                                aria-label="Get in touch"
                                 className="px-8 py-4 border border-white rounded-full hover:bg-white hover:text-black transition-all duration-300 uppercase text-sm tracking-widest text-white bg-transparent pointer-events-auto"
                             >
                                 Get in Touch
@@ -164,9 +172,10 @@ const ContactSnake = () => {
                                 {/* Close Button */}
                                 <button
                                     onClick={() => setShowEmail(false)}
-                                    className="absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors"
+                                    aria-label="Close contact form"
+                                    className="absolute top-4 right-4 text-zinc-500 hover:text-white transition-colors min-w-11 min-h-11 flex items-center justify-center"
                                 >
-                                    <X size={20} />
+                                    <X size={20} aria-hidden="true" />
                                 </button>
 
                                 {/* Envelope Icon Animation */}
@@ -190,6 +199,7 @@ const ContactSnake = () => {
                                         setCopied(true);
                                         setTimeout(() => setCopied(false), 2000);
                                     }}
+                                    aria-label={copied ? 'Email copied' : 'Copy email address'}
                                     className="group relative w-full px-6 py-4 bg-black border border-zinc-700 rounded-lg text-white hover:border-white transition-colors flex items-center justify-between gap-4"
                                 >
                                     <span className="font-mono text-sm tracking-widest truncate">
@@ -216,13 +226,13 @@ const ContactSnake = () => {
                 </div>
 
                 <div className="flex gap-8 mb-8 text-white pointer-events-auto">
-                    <a href="https://github.com/nyoupanekrrish" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform duration-300"><Github size={24} /></a>
-                    <a href="https://www.instagram.com/nyoupane_jii" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform duration-300"><Instagram size={24} /></a>
-                    <a href="https://www.facebook.com/krrish.nyoupane" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform duration-300"><Facebook size={24} /></a>
-                    <a href="https://www.linkedin.com/in/krrish-nyoupane/" target="_blank" rel="noopener noreferrer" className="hover:scale-110 transition-transform duration-300"><Linkedin size={24} /></a>
+                    <a href="https://github.com/nyoupanekrrish" target="_blank" rel="noopener noreferrer" aria-label="GitHub" className="hover:scale-110 transition-transform duration-300 min-w-11 min-h-11 flex items-center justify-center"><Github size={24} aria-hidden="true" /></a>
+                    <a href="https://www.instagram.com/nyoupane_jii" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="hover:scale-110 transition-transform duration-300 min-w-11 min-h-11 flex items-center justify-center"><Instagram size={24} aria-hidden="true" /></a>
+                    <a href="https://www.facebook.com/krrish.nyoupane" target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="hover:scale-110 transition-transform duration-300 min-w-11 min-h-11 flex items-center justify-center"><Facebook size={24} aria-hidden="true" /></a>
+                    <a href="https://www.linkedin.com/in/krrish-nyoupane/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="hover:scale-110 transition-transform duration-300 min-w-11 min-h-11 flex items-center justify-center"><Linkedin size={24} aria-hidden="true" /></a>
                 </div>
 
-                <p className="text-xs text-white/50 uppercase tracking-widest mt-2 mb-0">
+                <p className="text-xs text-white/70 uppercase tracking-widest mt-2 mb-0">
                     © {new Date().getFullYear()} Krrish Nyoupane. All rights reserved.
                 </p>
             </div>

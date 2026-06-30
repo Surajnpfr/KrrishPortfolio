@@ -36,9 +36,9 @@ const DimensionNav = ({ isOpen, onClose, onNavigate, isLight, onToggleTheme, isS
         <div className={`fixed inset-0 z-40 flex items-center justify-center p-4 md:p-8 transition-all duration-500 ${isOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
             {/* Background Atmosphere */}
             <div className="absolute inset-0 bg-zinc-950/80 backdrop-blur-sm transition-opacity duration-500"></div>
-            <div className="absolute inset-0 bg-[url('http://assets.iceable.com/img/noise-transparent.png')] opacity-10 mix-blend-overlay pointer-events-none"></div>
+            <div className="absolute inset-0 noise-texture opacity-10 mix-blend-overlay pointer-events-none" aria-hidden="true"></div>
 
-            <div ref={containerRef} className="w-full max-w-5xl flex flex-col gap-6 md:gap-8 relative z-10 perspective-1000 max-h-[85vh] overflow-y-auto md:overflow-visible no-scrollbar">
+            <div id="dimension-nav" ref={containerRef} className="w-full max-w-5xl flex flex-col gap-6 md:gap-8 relative z-10 perspective-1000 max-h-[85vh] overflow-y-auto md:overflow-visible no-scrollbar">
 
                 {/* Main Nav Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 md:gap-4">
@@ -69,6 +69,8 @@ const DimensionNav = ({ isOpen, onClose, onNavigate, isLight, onToggleTheme, isS
                     <button
                         onMouseEnter={handleHover}
                         onClick={() => { if (isSoundOn) playClick(); onToggleTheme(); }}
+                        aria-pressed={isLight}
+                        aria-label={isLight ? 'Switch to dark mode' : 'Switch to light mode'}
                         className="group flex justify-between md:justify-start items-center gap-4 md:gap-3 w-full md:w-auto px-6 py-4 md:py-3 bg-zinc-900/80 border border-white/5 rounded-2xl md:rounded-full backdrop-blur-md hover:bg-zinc-800 transition-all duration-500 hover:border-white/20 hover:shadow-xl hover:-translate-y-1"
                     >
                         <div className="flex items-center gap-4 md:gap-3">
@@ -91,6 +93,8 @@ const DimensionNav = ({ isOpen, onClose, onNavigate, isLight, onToggleTheme, isS
                     <button
                         onMouseEnter={handleHover}
                         onClick={() => { onToggleSound(); }}
+                        aria-pressed={isSoundOn}
+                        aria-label={isSoundOn ? 'Turn sound off' : 'Turn sound on'}
                         className="group flex justify-between md:justify-start items-center gap-4 md:gap-3 w-full md:w-auto px-6 py-4 md:py-3 bg-zinc-900/80 border border-white/5 rounded-2xl md:rounded-full backdrop-blur-md hover:bg-zinc-800 transition-all duration-500 hover:border-white/20 hover:shadow-xl hover:-translate-y-1"
                     >
                         <div className="flex items-center gap-4 md:gap-3">
